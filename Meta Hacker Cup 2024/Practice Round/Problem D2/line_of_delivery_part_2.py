@@ -96,11 +96,11 @@ class MyTreap():
 		R = self.right.stone_energies_to_reach() if self.right else []
 		return L + [pos] + R
 
-results = []
-
 start_time = time.time()
 
-for i, [goal, stones] in enumerate(cases):
+results = []
+
+for goal, stones in cases:
 	stone_treap = MyTreap(stones[0])
 	for stone in stones[1:]:
 		stone_treap = stone_treap.insert(stone)
@@ -112,11 +112,11 @@ for i, [goal, stones] in enumerate(cases):
 	best_distance = abs(positions[0] - goal)
 	best_index = 0
 
-	for j in range(1, len(positions)):
-		distance = abs(positions[j] - goal)
+	for i in range(1, len(positions)):
+		distance = abs(positions[i] - goal)
 		if distance < best_distance:
 			best_distance = distance
-			best_index = j
+			best_index = i
 
 	results.append([best_index, best_distance])
 
