@@ -1,4 +1,5 @@
 from random import random
+import time
 
 input_file = 'line_of_delivery_part_2_input.txt'
 
@@ -117,6 +118,8 @@ class MyTreap():
 
 results = []
 
+start_time = time.time()
+
 for i, [goal, stones] in enumerate(cases):
 	stone_treap = MyTreap(stones[0], stones[0])
 	for stone in stones[1:]:
@@ -136,6 +139,7 @@ for i, [goal, stones] in enumerate(cases):
 	results.append([best_index, best_distance])
 
 
+print(f"Evaluation completed in {(time.time()-start_time):.2f} seconds")
 
 print("Saving results")
 
