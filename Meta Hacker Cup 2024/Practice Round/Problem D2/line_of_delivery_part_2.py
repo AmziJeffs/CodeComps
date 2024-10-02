@@ -18,28 +18,27 @@ with open(input_file, 'r') as f:
 print("Evaluating cases")
 
 class MyTreap():
-	def __init__(self, position, energy_to_reach):
-		self.position = position
+	def __init__(self, energy_to_reach):
 		self.energy_to_reach = energy_to_reach
-		self.position_offset = 0
-		self.energy_offset = 0
+		self.offset = 0
 		self.left = None
 		self.right = None
 		self.priority = random()
 
-	def shift_left(self):
-		self.position_offset += 1
-
 	def decrement_energy(self):
-		self.energy_offset += 1
-
-	def get_position(self):
-		self.push_offsets()
-		return self.position
+		self.offset += 1
 
 	def get_energy(self):
-		self.push_offsets()
+		self.push_offset()
 		return self.energy_to_reach
+
+	def push_offset(self):
+		self.energy_to_reach -= self.offset
+		if self.left:
+			self.left.offset += self.offset
+		if self.right:
+			self.right.offset += self.offset
+		self.offset = 0
 
 	def split(self, energy_threshold):
 		if self.get_energy() <= energy_threshold:
@@ -58,7 +57,7 @@ class MyTreap():
 				return None, self
 
 	def merge(self, T):
-		self.push_offsets()
+		self.push_offset()
 		if T == None:
 			return self
 		if not self.right:
@@ -73,20 +72,8 @@ class MyTreap():
 			T.left = merged
 			return T
 
-	def push_offsets(self):
-		self.energy_to_reach -= self.energy_offset
-		self.position -= self.position_offset
-		if self.left:
-			self.left.energy_offset += self.energy_offset
-			self.left.position_offset += self.position_offset
-		if self.right:
-			self.right.energy_offset += self.energy_offset
-			self.right.position_offset += self.position_offset
-		self.energy_offset = 0
-		self.position_offset = 0
-
 	def get_rightmost_node(self):
-		self.push_offsets()
+		self.push_offset()
 		if not self.right:
 			return self
 		else:
@@ -94,26 +81,19 @@ class MyTreap():
 
 	def insert(self, stone_energy):
 		L, R = self.split(stone_energy)
-
-		stone_x = stone_energy
-		if L:
-			closest_stone_to_left = L.get_rightmost_node()
-			energy_left_over = stone_energy - closest_stone_to_left.get_energy() + 1
-			stone_x = closest_stone_to_left.get_position() + energy_left_over
-			L.shift_left()
 		
-		stone = MyTreap(stone_x, stone_energy + 1)
+		new_stone = MyTreap(stone_energy + 1)
 
-		result = L.merge(stone) if L else stone
+		result = L.merge(new_stone) if L else new_stone
 		result = result.merge(R)
 		result.decrement_energy()
 
 		return result 
 
-	def stone_positions(self):
-		pos = self.get_position()
-		L = self.left.stone_positions() if self.left else []
-		R = self.right.stone_positions() if self.right else []
+	def stone_energies_to_reach(self):
+		pos = self.get_energy()
+		L = self.left.stone_energies_to_reach() if self.left else []
+		R = self.right.stone_energies_to_reach() if self.right else []
 		return L + [pos] + R
 
 results = []
@@ -121,11 +101,13 @@ results = []
 start_time = time.time()
 
 for i, [goal, stones] in enumerate(cases):
-	stone_treap = MyTreap(stones[0], stones[0])
+	stone_treap = MyTreap(stones[0])
 	for stone in stones[1:]:
 		stone_treap = stone_treap.insert(stone)
 
-	positions = stone_treap.stone_positions()[::-1]
+	energies = stone_treap.stone_energies_to_reach()
+	positions = [energy + i for i, energy in enumerate(energies)]
+	positions = positions[::-1]
 
 	best_distance = abs(positions[0] - goal)
 	best_index = 0
