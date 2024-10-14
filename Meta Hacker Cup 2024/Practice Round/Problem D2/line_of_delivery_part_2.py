@@ -182,8 +182,8 @@ print(f"Evaluation completed in {(time.time()-start_time):.2f} seconds")
 
 print("Saving results")
 
-with open('results.txt', 'w') as f:
+with open("results.txt", "w") as f:
 	for i, result in enumerate(results):
-		f.write(f'Case #{i+1}: {result[0]+1} {result[1]}\n') # Not zero-indexed!
+		f.write(f"Case #{i+1}: {result[0]+1} {result[1]}\n") # Not zero-indexed!
 
 print("Complete")
