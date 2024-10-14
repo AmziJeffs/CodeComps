@@ -7,23 +7,20 @@ import time
 import random
 from collections import Counter
 
-input_file = 'fall_in_line_input.txt'
-
 print("Reading input file")
 
-with open(input_file, 'r') as f:
-	raw = f.read().split('\n')
-
-num_tests = int(raw.pop(0))
-
+input_file = "fall_in_line_input.txt"
 cases = []
-for i in range(num_tests):
-	num_ants = int(raw.pop(0))
-	case = []
-	for j in range(num_ants):
-		case.append([int(coord) for coord in raw[j].split(" ")])
-	cases.append(case)
-	raw = raw[num_ants:]
+
+with open(input_file, "r") as f:
+	num_tests = int(f.readline())
+	for _ in range(num_tests):
+		num_ants = int(f.readline())
+		case = []
+		for _ in range(num_ants):
+			case.append([int(coord) for coord in f.readline().split(" ")])
+		cases.append(case)
+
 
 print("Evaluating cases")
 
