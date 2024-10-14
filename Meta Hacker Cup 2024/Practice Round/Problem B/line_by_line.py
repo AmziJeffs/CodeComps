@@ -1,24 +1,34 @@
-input_file = 'line_by_line_input.txt'
-
 print("Reading input file")
 
-with open(input_file, 'r') as f:
-	raw = f.read().split('\n')
+input_file = "line_by_line_input.txt"
+cases = []
 
-num_tests = int(raw.pop(0))
-results = []
+with open(input_file, "r") as f:
+	num_tests = int(f.readline())
+	for _ in range(num_tests):
+		N, P = [int(a) for a in f.readline().split(" ")]
+		cases.append([N, P])
+
 
 print("Evaluating cases")
 
-for i in range(num_tests):
-	N, P = [int(num) for num in raw[i].split(' ')]
+results = []
+
+for N, P in cases:
+	# Normalize P to range [0, 1]
 	P = P/100
-	results.append(100 * (P**((N-1)/N)-P))
+
+	# Compute new probability needed, and take difference with P
+	result = P**((N - 1) / N) - P
+
+	# Record results, re-mapping to range [0, 100]
+	results.append(100 * result)
+
 
 print("Saving results")
 
-with open('results.txt', 'w') as f:
+with open("results.txt", "w") as f:
 	for i, result in enumerate(results):
-		f.write(f'Case #{i+1}: {result}\n')
+		f.write(f"Case #{i+1}: {result}\n")
 
 print("Complete")
