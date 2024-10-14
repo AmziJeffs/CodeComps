@@ -1,24 +1,21 @@
-input_file = 'line_of_delivery_part_1_input.txt'
-
 print("Reading input file")
 
-with open(input_file, 'r') as f:
-	raw = f.read().split('\n')
-
-num_tests = int(raw.pop(0))
-results = []
+input_file = "line_of_delivery_part_1_input.txt"
 cases = []
 
-for i in range(num_tests):
-	case = [None, []]
-	N, G = [int(num) for num in raw[0].split(' ')]
-	case[0] = G
-	for j in range(N):
-		case[1].append(int(raw[j+1]))
-	cases.append(case)
-	raw = raw[N+1:]
+with open(input_file, "r") as f:
+	num_tests = int(f.readline())
+	for _ in range(num_tests):
+		N, G = [int(a) for a in f.readline().split(" ")]
+		stones = []
+		for _ in range(N):
+			stones.append(int(f.readline()))
+		cases.append([G, stones])
+		
 
 print("Evaluating cases")
+
+results = []
 
 for goal, stones in cases:
 	# The set of energies is the same as the set of positions where stones land
