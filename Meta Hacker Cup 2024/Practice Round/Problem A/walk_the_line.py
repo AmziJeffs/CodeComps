@@ -1,39 +1,43 @@
-input_file = 'walk_the_line_input.txt'
-
 print("Reading input file")
 
-with open(input_file, 'r') as f:
-	raw = f.read().split('\n')
+input_file = "walk_the_line_input.txt"
+cases = []
 
-num_tests = int(raw.pop(0))
-results = []
+with open(input_file, "r") as f:
+	num_tests = int(f.readline())
+	for _ in range(num_tests):
+		N, K = [int(a) for a in f.readline().split(" ")]
+		animal_speeds = []
+		for _ in range(N):
+			animal_speeds.append(int(f.readline()))
+		cases.append([K, animal_speeds])
+
 
 print("Evaluating cases")
 
-for i in range(num_tests):
-	# Compute the number of animals, goal time, and speeds
-	N, K = [int(num) for num in raw[0].split(' ')]
-	animals = []
-	for j in range(N):
-		animals.append(int(raw[j+1]))
+results = []
 
-	quickest = min(animals) # Find the quickest animal to ferry all the others
-	result = None
+for K, animal_speeds in cases:
+	# Compute the number of animals, and the fastest speed among them
+	N = len(animal_speeds)
+	quickest = min(animal_speeds)
+
+	# If more than one animal, the fastest animal should ferry them all
+	# repeatedly, taking a total of N - 2 trips back and forth, plus
+	# one final trip carrying the last animal.
+	# If only one animal, simply cross the bridge and check if the speed
+	# is fast enough.
 	if N > 1:
-		result = (quickest * (2*(N-2) + 1) <= K) # quickest animal must cross there and back 
-											     # for all but the last animal, for which
-											     # it must cross only the final trip.
+		results.append(quickest * (2 * (N - 2) + 1) <= K) 
 	else:
-		result = (quickest <= K) # If only one animal, just need to check its speed
-	
-	# Store results and update list of cases
-	results.append(result)
-	raw = raw[N+1:]
+		results.append(quickest <= K)
+
 
 print("Saving results")
 
-with open('results.txt', 'w') as f:
+with open("results.txt", "w") as f:
 	for i, result in enumerate(results):
-		f.write(f'Case #{i+1}: {"YES" if result else "NO"}\n')
+		f.write(f"Case #{i+1}: {"YES" if result else "NO"}\n")
+
 
 print("Complete")
