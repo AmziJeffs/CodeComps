@@ -136,7 +136,7 @@ class MyTreap():
 
 	def stone_energies_to_reach(self):
 		"""
-		Get a sorted list of all values in the treap
+		Get a sorted list of all values in the treap.
 		"""
 
 		pos = self.get_energy()
@@ -149,27 +149,36 @@ start_time = time.time()
 results = []
 
 for goal, stones in cases:
+	# First, insert all stones into a treap.
 	stone_treap = MyTreap(stones[0])
 	for stone in stones[1:]:
 		stone_treap = stone_treap.insert(stone)
 
+	# Get the list of energies to reach each stone in the final configuration.
 	energies = stone_treap.stone_energies_to_reach()
+
+	# To obtain the positions of the stones, we note that the energy required
+	# to reach it is the difference of its position and the number of stones
+	# that precede it. 
 	positions = [energy + i for i, energy in enumerate(energies)]
+
+	# Reverse the positions list. Now, the i-th element is where the i-th
+	# thrown stone lands.
 	positions = positions[::-1]
 
-	best_distance = abs(positions[0] - goal)
-	best_index = 0
+	# From here, we proceed as in Problem D1. We find the best possible
+	# distance to the goal, and loop through the stones until we find the
+	# first one that lands at that distance.
+	distances_to_goal = [abs(position - goal) for position in positions]
+	min_distance = min(distances_to_goal)
 
-	for i in range(1, len(positions)):
-		distance = abs(positions[i] - goal)
-		if distance < best_distance:
-			best_distance = distance
-			best_index = i
-
-	results.append([best_index, best_distance])
-
+	for i in range(len(stones)):
+		if abs(positions[i] - goal) == min_distance:
+			results.append([i, min_distance])
+			break
 
 print(f"Evaluation completed in {(time.time()-start_time):.2f} seconds")
+
 
 print("Saving results")
 
