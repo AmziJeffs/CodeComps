@@ -20,7 +20,7 @@ print("Evaluating cases")
 
 class MyTreap():
 	"""
-	A custom treap implementation that allows efficient decrementing of all
+	Custom treap implementation that allows efficient decrementing of all
 	elements simultaneously.
 
 	Rather than storing the *positions* of all stones, we store the energy
@@ -56,7 +56,7 @@ class MyTreap():
 
 	def push_offset(self):
 		"""
-		Updates the value in the node and its children according to the amount
+		Update the value in the node and its children according to the amount
 		of accumulated offset.
 		"""
 
@@ -157,7 +157,7 @@ for goal, stones in cases:
 	# Get the list of energies to reach each stone in the final configuration.
 	energies = stone_treap.stone_energies_to_reach()
 
-	# To obtain the positions of the stones, we note that the energy required
+	# To obtain the positions of each stone, note that the energy required
 	# to reach it is the difference of its position and the number of stones
 	# that precede it. 
 	positions = [energy + i for i, energy in enumerate(energies)]
